@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.droiddevstar.jokeapp.repository.JokeRepository
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 
 class JokesViewModel
@@ -24,7 +25,16 @@ constructor(private val repository: JokeRepository,
             Timber.e("!!!response: $response")
             response.let {
                 if (it.isSuccessful) {
-                    Timber.e(it.body())
+                    Timber.e(it.toString())
+                    Timber.e(it.body().toString())
+//                    response.body()?.string()
+
+
+                    val inputStream = it.body()?.byteStream()
+                    val byteArray = inputStream?.readBytes()
+                    val jokeReadableText = String(byteArray!!)
+                    Timber.e(jokeReadableText)
+
                 }
             }
         }
