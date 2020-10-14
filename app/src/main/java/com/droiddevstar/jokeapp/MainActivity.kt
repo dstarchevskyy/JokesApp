@@ -39,6 +39,8 @@ class MainActivity : AppCompatActivity() {
                 jokesList.removeAt(0)
             }
 
+//            val jokeDiffUtilCallback =  JokeDiffUtilCallback(jokesList, newList)
+
             adapter.notifyDataSetChanged()
         }
     }
