@@ -1,6 +1,7 @@
 package com.droiddevstar.jokeapp.di
 
 import com.droiddevstar.jokeapp.repository.JokeApi
+import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -23,7 +24,8 @@ object NetworkModule {
         return builder
             .client(okHttpClient)
             .baseUrl(BASE_URL)
-            .addCallAdapterFactory(FlowCallAdapterFactory.create())
+            .addCallAdapterFactory(CoroutineCallAdapterFactory())
+//            .addCallAdapterFactory(FlowCallAdapterFactory.create())
             .build().create(JokeApi::class.java)
     }
 
