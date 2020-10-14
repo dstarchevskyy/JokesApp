@@ -14,7 +14,9 @@ class JokesViewModel
 @ViewModelInject
 constructor(private val repository: JokeRepository): ViewModel() {
 
-    val jokeLiveDate = MutableLiveData<String?>(null)
+//    val jokeLiveDate = MutableLiveData<String?>(null)
+    private val jokesList = ArrayList<String>()
+    val jokesLiveData = MutableLiveData<MutableList<String>>()
     val isLoading = MutableLiveData(false)
 
     fun startLoadingLoop() {
@@ -42,7 +44,11 @@ constructor(private val repository: JokeRepository): ViewModel() {
                         val byteArray = inputStream?.readBytes()
                         val jokeReadableText = replaceEscapeChars(String(byteArray!!))
                         Timber.e(jokeReadableText)
-                        jokeLiveDate.postValue(jokeReadableText)
+                        jokesList.add(jokeReadableText)
+                        while (jokesList.size > MAX_JOKES_IN_LIST) {
+                            jokesList.removeAt(0)
+                        }
+                        jokesLiveData.postValue(jokesList)
                     }
                 }
             } catch (e: Exception) {
@@ -53,4 +59,5 @@ constructor(private val repository: JokeRepository): ViewModel() {
     }
 }
 
-const val LOADING_INTERVAL = 2000  // TODO: set 1 minute: (60*1000).toLong()
+const val LOADING_INTERVAL = 3000  // TODO: set 1 minute: (60*1000).toLong()
+const val MAX_JOKES_IN_LIST = 3 // TODO: 10 by task
