@@ -8,7 +8,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.droiddevstar.jokeapp.repository.JokeRepository
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import timber.log.Timber
 
 class JokesViewModel
@@ -34,7 +33,7 @@ constructor(private val repository: JokeRepository,
                     val byteArray = inputStream?.readBytes()
                     val jokeReadableText = String(byteArray!!)
                     Timber.e(jokeReadableText)
-
+                    jokeLiveDate.postValue(jokeReadableText)
                 }
             }
         }
