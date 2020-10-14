@@ -2,17 +2,16 @@ package com.droiddevstar.jokeapp
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import javax.inject.Inject
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
-    @Inject
-    lateinit var presenter: JokePresenter
+    private val jokeViewModel: JokesViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        presenter.attachView(this)
     }
+
 }
