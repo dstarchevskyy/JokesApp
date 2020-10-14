@@ -22,9 +22,9 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.clRoot)
         configureRecyclerView()
-        jokeViewModel.jokeLiveDate.observe(this, { newData -> onNewJoke(newData) })
+        jokeViewModel.jokeLiveDate.observe(this, { onNewJoke(it) })
         jokeViewModel.startLoadingLoop()
-        showProgress()
+        jokeViewModel.isLoading.observe(this, { onLoadingStatusChanged(it) } )
     }
 
     private fun configureRecyclerView() {
@@ -35,18 +35,27 @@ class MainActivity : AppCompatActivity() {
     private fun onNewJoke(newJoke: String?) {
         if (!newJoke.isNullOrBlank()) {
             jokesList.add(newJoke)
+            while (jokesList.size > 10) {
+                jokesList.removeAt(0)
+            }
+
             adapter.notifyDataSetChanged()
         }
-
-        hideProgress()
     }
 
-    fun showProgress() {
+    private fun showProgress() {
         binding.pbProgress.visibility = VISIBLE
     }
 
-    fun hideProgress() {
+    private fun hideProgress() {
         binding.pbProgress.visibility = GONE
     }
 
+    private fun onLoadingStatusChanged(isLoading: Boolean) {
+        if (isLoading) {
+            showProgress()
+        } else {
+            hideProgress()
+        }
+    }
 }

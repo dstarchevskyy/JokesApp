@@ -15,6 +15,7 @@ class JokesViewModel
 constructor(private val repository: JokeRepository): ViewModel() {
 
     val jokeLiveDate = MutableLiveData<String?>(null)
+    val isLoading = MutableLiveData(false)
 
     fun startLoadingLoop() {
         viewModelScope.launch {
@@ -29,6 +30,7 @@ constructor(private val repository: JokeRepository): ViewModel() {
 
     private suspend fun loadNextJoke() {
         try {
+            isLoading.postValue(true)
             val response = repository.getJokeAsync().await()
             Timber.e("!!!response: $response")
                 response.let {
@@ -45,6 +47,8 @@ constructor(private val repository: JokeRepository): ViewModel() {
                 }
             } catch (e: Exception) {
                 Timber.e(e)
+        } finally {
+            isLoading.postValue(false)
         }
     }
 }
