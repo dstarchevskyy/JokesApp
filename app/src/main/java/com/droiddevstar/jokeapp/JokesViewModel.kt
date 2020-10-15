@@ -6,7 +6,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.droiddevstar.jokeapp.Util.Companion.replaceEscapeChars
 import com.droiddevstar.jokeapp.repository.JokeRepository
+import com.droiddevstar.jokeapp.repository.database.JokeModel
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.collect
 import timber.log.Timber
 import java.lang.Exception
 
@@ -19,6 +21,16 @@ constructor(private val repository: JokeRepository): ViewModel() {
     val isLoading = MutableLiveData(false)
 
     fun startLoadingLoop() {
+        viewModelScope.launch {
+            withContext(Dispatchers.Default) {
+                repository.getJokesFromDB().collect {
+                    it.all { jokeModel ->
+                        jokesList.add(jokeModel.jokeText)
+                    }
+                }
+            }
+        }
+
         viewModelScope.launch {
             withContext(Dispatchers.Default) {
                 while (true) {
@@ -55,6 +67,24 @@ constructor(private val repository: JokeRepository): ViewModel() {
         } finally {
             isLoading.postValue(false)
         }
+    }
+
+    fun save() {
+        viewModelScope.launch {
+            withContext(Dispatchers.Default) {
+                Timber.e("!!!SAVE")
+                repository.saveJokesToDb(convertToDbList())
+            }
+        }
+    }
+
+    private fun convertToDbList(): List<JokeModel> {
+        val dbModelList = arrayListOf<JokeModel>()
+        jokesList.forEach {
+            dbModelList.add(JokeModel(jokeText = it))
+        }
+
+        return dbModelList
     }
 }
 

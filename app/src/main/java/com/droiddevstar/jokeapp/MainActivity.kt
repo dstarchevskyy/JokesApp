@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.droiddevstar.jokeapp.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
 
-
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
@@ -50,5 +49,10 @@ class MainActivity : AppCompatActivity() {
         } else {
             hideProgress()
         }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        jokeViewModel.save()
     }
 }
