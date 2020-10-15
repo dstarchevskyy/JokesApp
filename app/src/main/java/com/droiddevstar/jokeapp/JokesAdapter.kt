@@ -22,11 +22,6 @@ class JokesAdapter : RecyclerView.Adapter<JokeViewHolder>() {
         return JokeViewHolder(itemView)
     }
 
-    fun setData(newList: List<String>) {
-        this.list.clear()
-        this.list.addAll(newList)
-    }
-
     override fun onBindViewHolder(
         holder: JokeViewHolder,
         position: Int
@@ -38,14 +33,14 @@ class JokesAdapter : RecyclerView.Adapter<JokeViewHolder>() {
         return list.size
     }
 
-    fun getData(): List<String> {
-        return list
-    }
+    fun updateList(newList: List<String>) {
+        val jokeDiffUtilCallback = JokeDiffUtilCallback(list, newList)
+        val jokeDiffResult = DiffUtil.calculateDiff(jokeDiffUtilCallback)
+        this.list.clear()
+        this.list.addAll(newList)
+        jokeDiffResult.dispatchUpdatesTo(this)
 
-//    fun updateList(newList: List<String>) {
-//        val diffResult = DiffUtil.calculateDiff(JokeDiffUtilCallback(this.list, newList))
-//        diffResult.dispatchUpdatesTo(this)
-//    }
+    }
 }
 
 class JokeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

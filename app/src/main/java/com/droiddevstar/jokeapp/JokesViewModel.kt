@@ -14,7 +14,6 @@ class JokesViewModel
 @ViewModelInject
 constructor(private val repository: JokeRepository): ViewModel() {
 
-//    val jokeLiveDate = MutableLiveData<String?>(null)
     private val jokesList = ArrayList<String>()
     val jokesLiveData = MutableLiveData<MutableList<String>>()
     val isLoading = MutableLiveData(false)
@@ -24,7 +23,7 @@ constructor(private val repository: JokeRepository): ViewModel() {
             withContext(Dispatchers.Default) {
                 while (true) {
                     loadNextJoke()
-                    delay(2000)
+                    delay(LOADING_INTERVAL)
                 }
             }
         }
@@ -59,5 +58,5 @@ constructor(private val repository: JokeRepository): ViewModel() {
     }
 }
 
-const val LOADING_INTERVAL = 3000  // TODO: set 1 minute: (60*1000).toLong()
+const val LOADING_INTERVAL = 3000L  // TODO: set 1 minute: (60*1000).toLong()
 const val MAX_JOKES_IN_LIST = 3 // TODO: 10 by task
